@@ -1,0 +1,47 @@
+# Pseudo Code:
+#
+# zcount = 0
+# for i =0 , i to n-1 do
+#	if (list[i] == 0) then :
+#		zcount+=1
+#	
+#	end if 
+#
+#
+# end for
+# register usage:
+# r5 : zcount
+# r4 : pointer to list item
+# r3 : value of current list item
+# r2 : size of list (used to coutdown in for loop)
+
+.text
+.global _start
+.org 0x0000
+
+
+movi  r5,0    #move immidate value into register also mov r5,r0
+
+movi  r4,LIST  #movi because LIST is a constant number, r4 acts as a pointer i
+ldw   r2,N(r0) 	#initialize size N
+Loop:
+
+IF:
+	ldw r3,0(r4)  #load contents of r4 with an offset of zero, r4 will 
+	bne r3,r0, end_if
+then:
+	addi r5,r5,1
+
+end_if:
+	addi r4,r4,4 # increment the pointer 4 for the pointer because we are going to the next word
+	subi r2,r2,1 #decrement 
+	bgt r2,r0,loop
+	stw r2,ZCOUNT(r0) #addressing mode immediate Zcount address +0
+
+	.org ox1000
+
+zCOUNT: .skip 4
+N: .word 5
+LIST: .word 34,0,0,57,91,0
+
+	.end 

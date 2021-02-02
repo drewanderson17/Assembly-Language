@@ -1,0 +1,69 @@
+# Pseudo code
+
+# LIst_Sum (list-ptr,n):
+#	sum =0 
+# 	for i in list to n:
+# 		sum = sum +list
+# machine code
+# set stack pointer		|sp
+# load list poinnter		|r2
+# load N (list size)		|r3
+# set sum =0 			|r4
+# put aprops vals into register
+# call List_Sum
+# set stack pointer
+# do LOOP code
+# remove stuff on stack
+
+
+
+.text
+.global _start
+.org 0x0000
+_start:
+	movia sp, 0x7FFFC 
+	movia r2,LIST
+	ldw  r3,N(r0)
+	
+	
+	call CalcSum
+	
+_end:
+	br	_end
+#-----------------------------
+CalcSum:
+	subi sp,sp, 12
+	stw r2,8(sp)
+	stw r3,4(sp)
+	stw r4, 0(sp)
+	movi r4,0 #sum =0
+
+calc_loop:
+	
+	ldw r5,0(r2)
+	add r4,r4,r5
+	addi r2,r2,4
+	subi r3,r3,1
+	bgt r3,r0, calc_loop
+	
+	stw r4, SUM(r0)
+
+	
+
+
+
+	ldw r2,8(sp)
+	ldw r3,4(sp)
+	ldw r4, 0(sp)
+	addi sp,sp, 12
+	
+	ret
+
+
+
+#----------------------
+	.org 0x1000
+SUM:	.skip 4
+N:	.word 5
+LIST:	.word 12, -1 , 7,-1,2
+	.end
